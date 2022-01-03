@@ -1,6 +1,8 @@
 package main
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestTwoSum(t *testing.T) {
 	nums := []int{2, 7, 11, 15}
@@ -17,5 +19,39 @@ func TestTwoSum(t *testing.T) {
 	target = 6
 	if ans := twoSum(nums, target); ans[0] != 1 && ans[1] != 0 {
 		t.Errorf("TwoSum expected be [1,0], but %v got", ans)
+	}
+}
+
+// [2,4,9]
+// [5,6,4,9]
+// [7,0,4,0,1]
+func TestAddTwoNumbers(t *testing.T) {
+	l1 := &ListNode{Val: 2}
+	l1.Next = &ListNode{Val: 4}
+	l1.Next.Next = &ListNode{Val: 9}
+
+	l2 := &ListNode{Val: 5}
+	l2.Next = &ListNode{Val: 6}
+	l2.Next.Next = &ListNode{Val: 4}
+	l2.Next.Next.Next = &ListNode{Val: 9}
+
+	except := &ListNode{Val: 7}
+	except.Next = &ListNode{Val: 0}
+	except.Next.Next = &ListNode{Val: 4}
+	except.Next.Next.Next = &ListNode{Val: 0}
+	except.Next.Next.Next.Next = &ListNode{Val: 1}
+
+	got := addTwoNumbers(l1, l2)
+	equal := true
+	for got != nil && except != nil {
+		if got.Val != except.Val {
+			equal = false
+			break
+		}
+		got = got.Next
+		except = except.Next
+	}
+	if !equal {
+		t.Errorf("addTwoNumbers expected be [7,0,4,0,1], but %v got", got)
 	}
 }
