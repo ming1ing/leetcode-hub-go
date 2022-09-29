@@ -1,6 +1,7 @@
 package main
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -53,5 +54,14 @@ func TestAddTwoNumbers(t *testing.T) {
 	}
 	if !equal {
 		t.Errorf("addTwoNumbers expected be [7,0,4,0,1], but %v got", got)
+	}
+}
+
+func TestSetZeroes(t *testing.T) {
+	nums := [][]int{{1, 1, 1}, {1, 0, 1}, {1, 1, 1}}
+	target := [][]int{{1, 0, 1}, {0, 0, 0}, {1, 0, 1}}
+	setZeroes(nums)
+	if !reflect.DeepEqual(nums, target) {
+		t.Errorf("TwoSum expected be %v, but %v got", nums, target)
 	}
 }

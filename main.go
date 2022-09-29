@@ -20,6 +20,34 @@ func twoSum(nums []int, target int) []int {
 	}
 	return ans
 }
+func setZeroes(matrix [][]int) {
+	n := len(matrix)
+	m := len(matrix[0])
+	nn := make([]bool, n)
+	mm := make([]bool, m)
+	for i, v := range matrix {
+		for j, v2 := range v {
+			if v2 == 0 {
+				nn[i] = true
+				mm[j] = true
+			}
+		}
+	}
+	for k, v := range nn {
+		if v == true {
+			for i := 0; i < len(matrix[k]); i++ {
+				matrix[k][i] = 0
+			}
+		}
+	}
+	for k, v := range mm {
+		if v == true {
+			for j := 0; j < len(matrix); j++ {
+				matrix[j][k] = 0
+			}
+		}
+	}
+}
 func minMovesToSeat(seats []int, students []int) int {
 	sort.Ints(seats)
 	sort.Ints(students)
