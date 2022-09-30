@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"sort"
-	"strconv"
 	"strings"
 )
 
@@ -48,380 +46,35 @@ func setZeroes(matrix [][]int) {
 		}
 	}
 }
-func minMovesToSeat(seats []int, students []int) int {
-	sort.Ints(seats)
-	sort.Ints(students)
-	res := 0
-	for i := 0; i < len(seats); i++ {
-		if students[i] > seats[i] {
-			res += students[i] - seats[i]
+func reformatNumber(number string) string {
+	ss := strings.Split(number, " ")
+	ns := strings.Join(ss, "")
+	ss = strings.Split(ns, "-")
+	ns = strings.Join(ss, "")
+	rs := []byte(ns)
+	res := make([]byte, 0)
+	l := len(ns)
+	i := 0
+	for l > 3 {
+		if l != 4 {
+			res = append(res, rs[i:i+3]...)
+			res = append(res, '-')
+			i += 3
+			l -= 3
 		} else {
-			res += seats[i] - students[i]
+			res = append(res, rs[i:i+2]...)
+			res = append(res, '-')
+			i += 2
+			l -= 2
 		}
 	}
-	return res
-}
-func winnerOfGame(colors string) bool {
-	Alice := 0
-	Bob := 0
-	temp := 0
-	for i := 0; i < len(colors); {
-		for i < len(colors) {
-			if colors[i] == 'A' {
-				temp++
-			}
-			if colors[i] == 'B' {
-				if temp >= 2 {
-					Alice += temp - 2
-				}
-				temp = 0
-				break
-			}
-			i++
-		}
-		if temp > 2 {
-			Alice += temp - 2
-			temp = 0
-		}
-		for i < len(colors) {
-			if colors[i] == 'B' {
-				temp++
-			}
-			if colors[i] == 'A' {
-				if temp >= 2 {
-					Bob += temp - 2
-				}
-				temp = 0
-				break
-			}
-			i++
-		}
-		if temp > 2 {
-			Bob += temp - 2
-			temp = 0
-		}
+	if l > 0 {
+		res = append(res, rs[i:i+l]...)
+		l = 0
+	} else {
+		res = res[:len(res)-1]
 	}
-	if Alice <= Bob {
-		return false
-	}
-	return true
-}
-func areNumbersAscending(s string) bool {
-	token := strings.Split(s, " ")
-	temp := 0
-	for i := 0; i < len(token); i++ {
-		if value, err := strconv.Atoi(string(token[i])); err == nil {
-			if temp >= value {
-				return false
-			} else {
-				temp = value
-			}
-		}
-	}
-	return true
-}
-
-type Bank struct {
-	account []int64
-}
-
-func Constructor(balance []int64) Bank {
-	return Bank{
-		account: balance,
-	}
-}
-
-func (this *Bank) Transfer(account1 int, account2 int, money int64) bool {
-	if account1 > len(this.account) || account2 > len(this.account) {
-		return false
-	}
-	if this.account[account1-1] < money {
-		return false
-	}
-	this.account[account1-1] -= money
-	this.account[account2-1] += money
-	return true
-}
-
-func (this *Bank) Deposit(account int, money int64) bool {
-	if account > len(this.account) {
-		return false
-	}
-	this.account[account-1] += money
-	return true
-}
-
-func (this *Bank) Withdraw(account int, money int64) bool {
-	if account > len(this.account) {
-		return false
-	}
-	if this.account[account-1] < money {
-		return false
-	}
-	this.account[account-1] -= money
-	return true
-}
-func countMaxOrSubsets(nums []int) int {
-	maxn := 0
-	ans := 0
-	for i := 0; i < len(nums); i++ {
-		maxn = maxn | nums[i]
-	}
-	for i := 0; i < 1<<len(nums); i++ {
-		temp := 0
-		for j := 0; j < len(nums); j++ {
-			if (i & (1 << j)) > 0 {
-				temp = temp | nums[j]
-			}
-		}
-		if temp == maxn {
-			ans++
-		}
-	}
-	return ans
-}
-func secondMinimum(n int, edges [][]int, time int, change int) int {
-	grape := make(map[int][]int, len(edges))
-	for i := 0; i < len(edges); i++ {
-		from := edges[i][0]
-		to := edges[i][1]
-		grape[from] = append(grape[from], to)
-		grape[to] = append(grape[to], from)
-	}
-	queue := make([]int, 0)
-	queue = append(queue, 1)
-	mp := make(map[int]map[int]int, n)
-	visit := make([]bool, n)
-	for len(queue) > 0 {
-		front := queue[0]
-		queue = queue[1:]
-		visit[front] = true
-		for i := 0; i < len(grape[front]); i++ {
-			if mp[front] == nil {
-				mp[front] = make(map[int]int, 0)
-			}
-			mp[front][grape[front][i]]++
-			if visit[grape[front][i]] == false {
-				queue = append(queue, grape[front][i])
-			}
-		}
-	}
-	t := make([]int, 0)
-	for key, value := range mp[n] {
-		t = append(t, value)
-		fmt.Println(key, value)
-	}
-	sort.Ints(t)
-	return t[n-1] * time
-}
-func countValidWords(sentence string) int {
-	s := strings.Split(sentence, " ")
-	count := 0
-	for i := 0; i < len(s); i++ {
-
-		if check(s[i]) {
-			count++
-			fmt.Println(s[i])
-		}
-	}
-	return count
-}
-
-func check(s string) bool {
-	if len(s) == 0 {
-		return false
-	}
-	lenh := 0
-	for i := 0; i < len(s); i++ {
-		if i == len(s)-1 {
-			if s[i] == '!' || s[i] == ',' || s[i] == '.' {
-				continue
-			}
-		}
-		if s[i] < 'a' || s[i] > 'z' {
-			if s[i] == '-' && i != 0 && i != len(s)-1 && lenh == 0 {
-				lenh++
-				if s[i-1] >= 'a' && s[i-1] <= 'z' && s[i+1] >= 'a' && s[i+1] <= 'z' {
-					continue
-				}
-			}
-			return false
-		}
-	}
-	return true
-}
-
-func nextBeautifulNumber(n int) int {
-	for i := n + 1; i <= 100000000; i++ {
-		if checkNum(i) {
-			return i
-		}
-	}
-	return n
-}
-
-func checkNum(n int) bool {
-	mark := make([]int, 10)
-	flag := make([]bool, 10)
-	if n == 0 {
-		return false
-	}
-	temp := n
-	for temp > 0 {
-		dig := temp % 10
-		mark[dig]++
-		flag[dig] = true
-		temp /= 10
-	}
-	for i := 0; i < 10; i++ {
-		if flag[i] && mark[i] != i {
-			return false
-		}
-	}
-	return true
-}
-func countHighestScoreNodes(parents []int) int {
-	mp := make(map[int][]int, len(parents))
-	for i := 0; i < len(parents); i++ {
-		if parents[i] != -1 {
-			mp[parents[i]] = append(mp[parents[i]], i)
-		}
-	}
-	count := make([]int, len(parents))
-	for i := 1; i < len(parents); i++ {
-		count[parents[i]]++
-	}
-	queue := make([]int, 0)
-	for i := 1; i < len(parents); i++ {
-		if count[i] == 0 {
-			queue = append(queue, i)
-		}
-	}
-	num := make([]int, len(parents))
-	for len(queue) > 0 {
-		font := queue[0]
-		queue = queue[1:]
-		for i := 0; i < len(mp[font]); i++ {
-			count[font] += num[mp[font][i]]
-			count[mp[font][i]]--
-			if count[mp[font][i]] == 0 {
-				queue = append(queue, mp[font][i])
-			}
-		}
-	}
-	return 0
-}
-func kthDistinct(arr []string, k int) string {
-	mp := make(map[string]int, len(arr))
-	for i := 0; i < len(arr); i++ {
-		mp[arr[i]]++
-	}
-	ans := ""
-	count := 0
-	for i := 0; i < len(arr); i++ {
-		if mp[arr[i]] == 1 {
-			count++
-		}
-		if count == k {
-			return arr[i]
-		}
-	}
-	return ans
-}
-func platesBetweenCandles(s string, queries [][]int) []int {
-	left := make([]int, len(s))
-	right := make([]int, len(s))
-	count := make([]int, len(s))
-	left[0] = 0
-	right[len(s)-1] = len(s) - 1
-	for i := 1; i < len(s); i++ {
-		if s[i-1] == '|' {
-			left[i] = i - 1
-		} else {
-			left[i] = left[i-1]
-		}
-	}
-	for i := len(s) - 2; i >= 0; i-- {
-		if s[i+1] == '|' {
-			right[i] = i + 1
-		} else {
-			right[i] = right[i+1]
-		}
-	}
-	l := 0
-	for s[l] == '*' && l < len(s) {
-		l++
-	}
-	r := len(s) - 1
-	for s[r] == '*' && r > 0 {
-		r--
-	}
-	t := 1
-	for i := l; i <= r; i++ {
-		if s[i] == '|' {
-			count[i] = t
-		} else {
-			count[i] = t
-			t++
-		}
-	}
-	res := make([]int, 0)
-	for i := 0; i < len(queries); i++ {
-		L := queries[i][0]
-		R := queries[i][1]
-		if s[L] == '*' {
-			L = right[L]
-		}
-		if s[R] == '*' {
-			R = left[R]
-		}
-		x := count[R] - count[L]
-		if L > R {
-			x = 0
-		}
-		res = append(res, x)
-	}
-	return res
-}
-
-type ListNode struct {
-	Val  int
-	Next *ListNode
-}
-
-func nodesBetweenCriticalPoints(head *ListNode) []int {
-	res := make([]int, 0)
-	temp := head
-	count := 1
-	for temp != nil {
-		if temp.Next == nil || temp.Next.Next == nil {
-			break
-		}
-		if temp.Val > temp.Next.Val && temp.Next.Val < temp.Next.Next.Val {
-			res = append(res, count)
-			count++
-			temp = temp.Next
-			continue
-		}
-		if temp.Val < temp.Next.Val && temp.Next.Val > temp.Next.Next.Val {
-			res = append(res, count)
-		}
-		count++
-		temp = temp.Next
-	}
-	ans := make([]int, 0)
-	if len(res) < 2 {
-		return []int{-1, -1}
-	}
-	minn := 10000000
-	for i := 1; i < len(res); i++ {
-		if res[i]-res[i-1] < minn {
-			minn = res[i] - res[i-1]
-		}
-	}
-	ans = append(ans, minn)
-	ans = append(ans, res[len(res)-1]-res[0])
-	return ans
+	return string(res)
 }
 
 type Cc struct {
@@ -508,17 +161,17 @@ func findEvenNumbers(digits []int) []int {
 		}
 	}
 	res := make([]int, 0)
-	for key, _ := range mp {
+	for key := range mp {
 		res = append(res, key)
 	}
 	return res
 }
 
-//   Definition for singly-linked list.
-//   type ListNode struct {
-//       Val int
-//       Next *ListNode
-//   }
+//Definition for singly-linked list.
+type ListNode struct {
+	Val  int
+	Next *ListNode
+}
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	if l1 == nil {

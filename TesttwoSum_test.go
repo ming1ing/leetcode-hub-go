@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// 参考:https://www.liwenzhou.com/posts/Go/unit-test/
 func TestTwoSum(t *testing.T) {
 	nums := []int{2, 7, 11, 15}
 	target := 9
@@ -63,5 +64,28 @@ func TestSetZeroes(t *testing.T) {
 	setZeroes(nums)
 	if !reflect.DeepEqual(nums, target) {
 		t.Errorf("TwoSum expected be %v, but %v got", nums, target)
+	}
+}
+
+// go test -v
+func TestSplit(t *testing.T) {
+	type test struct { // 定义test结构体
+		input string
+		want  string
+	}
+	tests := map[string]test{ // 测试用例使用map存储
+		"len6":  {input: "1-23-45 6", want: "123-456"},
+		"len7":  {input: "123 4-567", want: "123-45-67"},
+		"len8":  {input: "123 4-5678", want: "123-456-78"},
+		"len2":  {input: "12", want: "12"},
+		"len13": {input: "--17-5 229 35-39475 ", want: "175-229-353-94-75"},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) { // 使用t.Run()执行子测试
+			got := reformatNumber(tc.input)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("expected:%#v, got:%#v", tc.want, got)
+			}
+		})
 	}
 }
