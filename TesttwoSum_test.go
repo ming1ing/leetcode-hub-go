@@ -89,3 +89,28 @@ func TestSplit(t *testing.T) {
 		})
 	}
 }
+
+// go test -v
+func TestCanTransform(t *testing.T) {
+	type test struct { // 定义test结构体
+		start string
+		end   string
+		want  bool
+	}
+	tests := map[string]test{ // 测试用例使用map存储
+		"case1": {start: "XRXXXLXXXR", end: "XXRLXXXRXX", want: false},
+		"case2": {start: "XXXXXLXXXLXXXX", end: "XXLXXXXXXXXLXX", want: false},
+		"case3": {start: "RXXLRXRXL", end: "XRLXXRRLX", want: true},
+		"case4": {start: "X", end: "L", want: false},
+		"case5": {start: "RL", end: "LR", want: false},
+		"case6": {start: "RLX", end: "XLR", want: false},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) { // 使用t.Run()执行子测试
+			got := canTransform(tc.start, tc.end)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("expected:%#v, got:%#v", tc.want, got)
+			}
+		})
+	}
+}
