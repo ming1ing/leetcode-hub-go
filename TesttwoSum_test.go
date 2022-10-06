@@ -114,3 +114,25 @@ func TestCanTransform(t *testing.T) {
 		})
 	}
 }
+
+// go test -v
+func TestMaxAscendingSum(t *testing.T) {
+	type test struct { // 定义test结构体
+		nums []int
+		want int
+	}
+	tests := map[string]test{ // 测试用例使用map存储
+		"case1": {nums: []int{100, 10, 1}, want: 100},
+		"case2": {nums: []int{10, 20, 30, 5, 10, 50}, want: 65},
+		"case3": {nums: []int{10, 20, 30, 40, 50}, want: 150},
+		"case4": {nums: []int{12, 17, 15, 13, 10, 11, 12}, want: 33},
+	}
+	for name, tc := range tests {
+		t.Run(name, func(t *testing.T) { // 使用t.Run()执行子测试
+			got := maxAscendingSum(tc.nums)
+			if !reflect.DeepEqual(got, tc.want) {
+				t.Errorf("expected:%#v, got:%#v", tc.want, got)
+			}
+		})
+	}
+}
